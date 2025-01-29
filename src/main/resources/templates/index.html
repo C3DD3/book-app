@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+
+        h1 {
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse; /* Çizgilerin çakışmasını önler */
+            width: 100%;
+            border-spacing: 45px 0; /* Sütunlar arasında 45px boşluk bırakır */
+        }
+        th, td {
+            padding: 15px 45px; /* Hücre içi boşluk */
+            text-align: left;
+        }
+        th {
+            text-align: center; /* Başlıkları ortalar */
+            font-size: 22px; /* Başlık font boyutunu artırır */
+            font-weight: bold; /* Başlıkları kalın yapar */
+            background-color: #f4f4f4; /* Hafif gri arka plan ekler */
+            padding: 20px 45px; /* Ekstra boşluk verir */
+        }
+        td {
+            font-size: 18px; /* Hücre içeriğinin font boyutunu artırır */
+        }
+        .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+        .btn:hover {
+        background-color: #0056b3;
+    }
+    </style>
+    <title>Books</title>
+</head>
+<body>
+<h1>Books</h1>
+<a href="/new-book" class="btn">Add New Book</a>
+<table border="1" style = "margin-top:30px;">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Price</th>
+        <th>ISBN</th>
+        <th>Author</th>
+        <th>Publisher</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.price}"></td>
+        <td th:text="${book.isbn13}"></td>
+        <td th:text="${book.author.nameSurname}"></td>
+        <td th:text="${book.publisher.publisherName}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
