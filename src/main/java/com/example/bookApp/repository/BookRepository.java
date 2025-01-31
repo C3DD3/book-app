@@ -18,4 +18,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findBooksPublishedAfter(@Param("year") int year);
 
     List<Book> findByTitleStartingWith(String prefix);
+
+    Book getBookById(Long id);
 }

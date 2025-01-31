@@ -28,6 +28,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.saveBook(book));
     }
 
+
     @GetMapping("/startswithA")
     public ResponseEntity<List<Book>> getBooksStartingWithA() {
         return ResponseEntity.ok(bookService.getBooksStartingWithA());
@@ -37,4 +38,5 @@ public class BookController {
     public ResponseEntity<List<Book>> getBooksPublishedAfter(@PathVariable int year) {
         return ResponseEntity.ok(bookService.getBooksPublishedAfter(year));
     }
+
 }

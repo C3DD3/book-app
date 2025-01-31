@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "BOOKS")
+@AllArgsConstructor
+@Data
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "TITLE")
+    @Column(name = "title")
     private String title;
 
     @Column(name = "price")
@@ -29,7 +29,6 @@ public class Book {
 
     @Column(name = "published_date")
     private LocalDate publishedDate;
-
 
     @ManyToOne
     @JoinColumn(name = "publisher_id", nullable = false)

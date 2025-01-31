@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Kitap Ekle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+
+    label {
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Yeni Kitap Ekle</h2>
+
+<form th:action="@{/saveBook}" th:object="${book}" method="post">
+  <input type="number" id="id" name="id" th:field="*{id}" hidden="hidden" />
+
+  <label for="title">Kitap Adı:</label>
+  <input type="text" id="title" name="title" th:field="*{title}" required />
+
+  <label for="price">Fiyat:</label>
+  <input type="number" id="price" name="price" th:field="*{price}" step="0.01" required />
+
+  <label for="isbn">ISBN-13:</label>
+  <input type="text" id="isbn" name="isbn" th:field="*{ISBN13}" required />
+
+  <label for="publishedDate">Yayın Tarihi:</label>
+  <input type="date" id="publishedDate" name="publishedDate" th:field="*{publishedDate}" required />
+
+  <label for="publisherName">Yayınevi:</label>
+  <input type="text" id="publisherName" name="publisherName" th:value="${publisherName}"  required />
+
+  <label for="authorName">Yazar:</label>
+  <input type="text" id="authorName" name="authorName" th:value="${authorName}"  required />
+
+  <button type="submit">Ekle</button>
+</form>
+
+</body>
+</html>
