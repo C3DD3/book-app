@@ -37,4 +37,9 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
+
+    // Get the publish year from the publishedDate
+    public int getPublishYear() {
+        return publishedDate != null ? publishedDate.getYear() : 0;
+    }
 }

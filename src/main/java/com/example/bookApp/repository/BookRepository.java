@@ -17,6 +17,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE FUNCTION('YEAR', b.publishedDate) > :year")
     List<Book> findBooksPublishedAfter(@Param("year") int year);
 
+    @Query("SELECT b.title FROM Book b")
+    List<String> findBookJustName();
+
     List<Book> findByTitleStartingWith(String prefix);
 
     Book getBookById(Long id);

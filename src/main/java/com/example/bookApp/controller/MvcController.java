@@ -3,9 +3,10 @@ package com.example.bookApp.controller;
 import com.example.bookApp.entity.Author;
 import com.example.bookApp.entity.Book;
 import com.example.bookApp.entity.Publisher;
-import com.example.bookApp.repository.AuthorRepository;
-import com.example.bookApp.repository.BookRepository;
-import com.example.bookApp.repository.PublisherRepository;
+import com.example.bookApp.service.concretes.AuthorServiceImpl;
+import com.example.bookApp.service.concretes.BookServiceImpl;
+import com.example.bookApp.service.concretes.PublisherServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,19 +18,19 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/")
 public class MvcController {
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final PublisherRepository publisherRepository;
+    private final BookServiceImpl bookService;
+    private final AuthorServiceImpl authorService;
+    private final PublisherServiceImpl publisherService;
 
-    public MvcController(BookRepository bookRepository, AuthorRepository authorRepository, PublisherRepository publisherRepository) {
-        this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.publisherRepository = publisherRepository;
+    public MvcController(BookServiceImpl bookService, AuthorServiceImpl authorService, PublisherServiceImpl publisherService) {
+        this.bookService = bookService;
+        this.authorService = authorService;
+        this.publisherService = publisherService;
     }
 
     @GetMapping
     public String index(Model model) {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookService.findAllBooks();
         model.addAttribute("books", books);
         return "index";
     }
@@ -37,21 +38,30 @@ public class MvcController {
     @GetMapping("/addBook")
     public String showAddBookForm(Model model) {
         model.addAttribute("book", new Book());
-        return "addBook"; // HTML sayfa adı
+        return "addBook";
     }
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    public String deleteBook(@PathVariable Long id, Model model) {
-        bookRepository.deleteById(id);
-        return "redirect:/"; // HTML sayfa adı
+
+    @PostMapping("/delete/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        bookService.deleteBookById(id);
+        return "redirect:/";
     }
+
     @GetMapping("/editBook/{id}")
     public String editBook(@PathVariable Long id, Model model) {
-        Book book = bookRepository.getBookById(id); // Kitabı ID ile bul
-        model.addAttribute("book", book); // Kitabı model'e ekle
-        model.addAttribute("publisherName", book.getPublisher().getName()); // Kitabı model'e ekle
-        model.addAttribute("authorName", book.getAuthor().getNameSurname()); // Kitabı model'e ekle
+        Optional<Book> bookOpt = bookService.findBookById(id);
+        if (bookOpt.isPresent()) {
+            Book book = bookOpt.get();
+            model.addAttribute("book", book);
+            model.addAttribute("publisherName", book.getPublisher().getName());
+            model.addAttribute("authorName", book.getAuthor().getNameSurname());
+        }
+        return "addBook";
+    }
 
-        return "addBook"; // addBook.html sayfasına yönlendir
+    @GetMapping("/publishedAfter/{year}")
+    public ResponseEntity<List<Book>> getBooksPublishedAfter(@PathVariable int year) {
+        return ResponseEntity.ok(bookService.getBooksPublishedAfter(year));
     }
 
     @PostMapping("/saveBook")
@@ -62,25 +72,45 @@ public class MvcController {
             BindingResult result,
             Model model
     ) {
-        // Publisher kontrolü: varsa getir, yoksa oluştur
-        Optional<Publisher> existingPublisher = publisherRepository.findByName(publisherName);
-        Publisher publisher = existingPublisher.orElseGet(() -> {
-            Publisher newPublisher = new Publisher(publisherName);
-            return publisherRepository.save(newPublisher);
-        });
+        Optional<Publisher> existingPublisher = publisherService.findPublisherByName(publisherName);
+        Publisher publisher = existingPublisher.orElseGet(() -> publisherService.savePublisher(new Publisher(publisherName)));
 
-        // Author kontrolü: varsa getir, yoksa oluştur
-        Optional<Author> existingAuthor = authorRepository.findByNameSurname(authorName);
-        Author author = existingAuthor.orElseGet(() -> {
-            Author newAuthor = new Author(authorName);
-            return authorRepository.save(newAuthor);
-        });
+        Optional<Author> existingAuthor = authorService.findAuthorByNameSurname(authorName);
+        Author author = existingAuthor.orElseGet(() -> authorService.saveAuthor(new Author(authorName)));
 
-        // Kitaba atama yap ve kaydet
         book.setPublisher(publisher);
         book.setAuthor(author);
-        bookRepository.save(book);
+        bookService.saveBook(book);
 
         return "redirect:/";
     }
+
+    @GetMapping("/listPublishers")
+    public String listAllPublishers(Model model) {
+        List<Publisher> publishers = publisherService.findAllPublishers();
+        model.addAttribute("publishers", publishers);
+        return "publishers";
+    }
+
+    @GetMapping("/listBooks")
+    public String listAllBooks(Model model) {
+        List<String> books = bookService.findBookJustName();
+        model.addAttribute("books", books);
+        return "books";
+    }
+
+    @GetMapping("/listAuthors")
+    public String listAllAuthors(Model model) {
+        List<Author> authors = authorService.findAllAuthors();
+        model.addAttribute("authors", authors);
+        return "authors";
+    }
+
+    @GetMapping("/booksWithAuthorsForTwoPublishers")
+    public String getBooksWithAuthorsForTwoPublishers(Model model) {
+        List<Book> books = publisherService.findBookRandom2Publisher(); // Book nesnelerinin döndüğünden emin olun
+        model.addAttribute("books", books);
+        return "booksWithAuthorsForTwoPublishers";
+    }
+
 }

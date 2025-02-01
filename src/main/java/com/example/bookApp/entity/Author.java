@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "authors")
 public class Author {
-    public Author(String nmeSurname) {
+    public Author(String nameSurname) {
         this.nameSurname = nameSurname;
     }
 

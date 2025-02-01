@@ -51,6 +51,23 @@
     button:hover {
       background-color: #0056b3;
     }
+    .button-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .btn {
+            font-size: 18px;
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #c82333;
+        }
   </style>
 </head>
 <body>
@@ -79,7 +96,11 @@
   <input type="text" id="authorName" name="authorName" th:value="${authorName}"  required />
 
   <button type="submit">Ekle</button>
+  <div class="button-container">
+    <button class="btn" onclick="window.location.href='/'">Go Back</button>
+  </div>
 </form>
+
 
 </body>
 </html>
