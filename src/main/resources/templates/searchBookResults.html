@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitap Arama Sonuçları</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            min-height: 100vh;
+        }
+        h1 {
+            margin-top: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .result-list {
+            list-style-type: none;
+            padding: 0;
+            width: 80%;
+            max-width: 900px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .result-item {
+            flex: 1 1 calc(50% - 20px);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .result-item:hover {
+            transform: scale(1.03);
+        }
+        .result-item strong {
+            color: #34495e;
+            font-size: 18px;
+        }
+        .result-item span {
+            color: #555;
+            font-size: 14px;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .btn {
+            font-size: 18px;
+            padding: 12px 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #e74c3c;
+            color: white;
+            transition: background 0.3s ease-in-out, transform 0.2s;
+        }
+        .btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        .label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .inline-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Arama Sonuçları</h1>
+
+<div th:if="${booksResponse != null}">
+    <p>Toplam Sonuç: <span th:text="${booksResponse.totalItems}"></span></p>
+    <p>Toplam Filtreli Sonuç: <span th:text="${booksResponse.items.size()}"></span></p>
+    <ul class="result-list">
+        <li th:each="item : ${booksResponse.items}" class="result-item">
+            <strong th:text="${item.volumeInfo.title}"></strong>
+            <div class="inline-info">
+                <span class="label" th:if="${item.volumeInfo.authors != null}">Yazar:</span> <span th:if="${item.volumeInfo.authors != null}" th:text="${#strings.arrayJoin(item.volumeInfo.authors.toArray(), ', ')}"></span>
+            </div>
+            <div class="inline-info">
+                <span class="label" th:if="${item.volumeInfo.publisher != null}">Yayıncı:</span> <span th:if="${item.volumeInfo.publisher != null}" th:text="${item.volumeInfo.publisher}"></span>
+            </div>
+            <div class="inline-info">
+                <span class="label" th:if="${item.volumeInfo.publishedDate != null}">Yayın Tarihi:</span> <span th:if="${item.volumeInfo.publishedDate != null}" th:text="${item.volumeInfo.publishedDate}"></span>
+            </div>
+            <div class="inline-info">
+                <span class="label" th:if="${item.volumeInfo.price != null}">Fiyat:</span> <span th:if="${item.volumeInfo.price != null}" th:text="${item.saleInfo?.listPrice?.amount ?: 'Fiyat Bilgisi Yok'}"></span>
+            </div>
+            <div class="inline-info">
+                <span class="label" th:if="${item.volumeInfo.ISBN13 != null}">ISBN13:</span> <span th:if="${item.volumeInfo.ISBN13 != null}" th:text="${item.volumeInfo.ISBN13}"></span>
+            </div>
+        </li>
+    </ul>
+</div>
+<div th:if="${errorMessage}" style="color: red; font-weight: bold; margin-top: 20px;">
+    <p th:text="${errorMessage}"></p>
+</div>
+<div class="button-container">
+    <button class="btn" onclick="window.location.href='/'">Go Back</button>
+</div>
+</body>
+</html>

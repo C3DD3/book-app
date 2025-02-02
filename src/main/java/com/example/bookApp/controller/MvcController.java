@@ -1,31 +1,40 @@
 package com.example.bookApp.controller;
 
+import com.example.bookApp.client.models.GoogleBooksResponse;
 import com.example.bookApp.entity.Author;
 import com.example.bookApp.entity.Book;
 import com.example.bookApp.entity.Publisher;
-import com.example.bookApp.service.concretes.AuthorServiceImpl;
-import com.example.bookApp.service.concretes.BookServiceImpl;
-import com.example.bookApp.service.concretes.PublisherServiceImpl;
+import com.example.bookApp.entity.dtos.BookSearchResponseDto;
+import com.example.bookApp.mapper.GoogleBookMapperService;
+import com.example.bookApp.service.abstracts.IAuthorService;
+import com.example.bookApp.service.abstracts.IBookService;
+import com.example.bookApp.service.abstracts.IPublisherService;
+import com.example.bookApp.service.concretes.BookSearchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
 public class MvcController {
-    private final BookServiceImpl bookService;
-    private final AuthorServiceImpl authorService;
-    private final PublisherServiceImpl publisherService;
+    private final IBookService bookService;
+    private final IAuthorService authorService;
+    private final IPublisherService publisherService;
+    private final BookSearchService bookSearchService;
+    private final GoogleBookMapperService mapper;
 
-    public MvcController(BookServiceImpl bookService, AuthorServiceImpl authorService, PublisherServiceImpl publisherService) {
+    public MvcController(IBookService bookService, IAuthorService authorService, IPublisherService publisherService, BookSearchService bookSearchService, GoogleBookMapperService mapper) {
         this.bookService = bookService;
         this.authorService = authorService;
         this.publisherService = publisherService;
+        this.bookSearchService = bookSearchService;
+        this.mapper = mapper;
     }
 
     @GetMapping
@@ -83,6 +92,31 @@ public class MvcController {
         bookService.saveBook(book);
 
         return "redirect:/";
+    }
+    @GetMapping("/searchBook")
+    public String showSearchBookForm() {
+        return "searchBook";
+    }
+
+    @GetMapping("/searchBookResults")
+    public String searchBookResults(@RequestParam("title") String title, Model model) {
+        GoogleBooksResponse response = bookSearchService.searchBooksByTitle(title);
+
+        if (response == null || response.getTotalItems() == 0 || response.getItems() == null || response.getItems().isEmpty()) {
+            model.addAttribute("errorMessage", "Aradığınız kitap bulunamadı.");
+            return "searchBook";
+        }
+
+        model.addAttribute("booksResponse", response);
+        return "searchBookResults";
+    }
+
+    @GetMapping(value = "/api/searchBookResults", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<ArrayList<BookSearchResponseDto>> searchBookResultsJson(@RequestParam("title") String title) {
+        GoogleBooksResponse response = bookSearchService.searchBooksByTitle(title);
+        ArrayList<BookSearchResponseDto> responseDto = (ArrayList<BookSearchResponseDto>) BookSearchResponseDto.fromList(response.getItems(), mapper);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/listPublishers")

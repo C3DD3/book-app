@@ -4,6 +4,9 @@ import com.example.bookApp.entity.Book;
 import com.example.bookApp.repository.BookRepository;
 import com.example.bookApp.service.abstracts.IBookService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,13 +33,13 @@ public class BookServiceImpl implements IBookService {
     public List<String> findBookJustName() {
         return bookRepository.findBookJustName();
     }
-
-
     @Override
     public Book saveBook(Book book) {
+        if (book.getPublishedDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Published date cannot be in the future!");
+        }
         return bookRepository.save(book);
     }
-
     @Override
     public void deleteBookById(Long id) {
         bookRepository.deleteById(id);
