@@ -76,7 +76,7 @@
 <h1>Books</h1>
 
 <a href="/addBook" class="btn" style="background-color: #0808d1;">Add New Book</a>
-<a href="/searchBook" class="btn" style="background-color: #0808d1;">URL'den Kitap Sorgula</a>
+<a href="/searchBook" class="btn" style="background-color: #0808d1;">Query Books from URL</a>
 <a href="/listPublishers" class="btn" style="margin-left: 20px;background-color: #007bff;">List All Publishers</a>
 <a href="/listBooks" class="btn" style="margin-left: 20px;background-color: #007bff;">List All Books</a>
 <a href="/listAuthors" class="btn" style="margin-left: 20px;background-color: #007bff;">List All Authors</a>
@@ -109,7 +109,7 @@
             </a>
             <form th:action="@{/delete/{id}(id=${book.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this book?');">
                 <input type="hidden" name="_method" value="DELETE"/>
-                <button type="submit" class="btn btn-delete">
+                <button style="margin-top:10px ;" type="submit" class="btn btn-delete">
                     <i class="fas fa-trash icon"></i> Delete
                 </button>
             </form>

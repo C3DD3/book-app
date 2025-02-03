@@ -9,6 +9,10 @@
 
     h2 {
       text-align: center;
+            color: #333;
+            margin-top: 40px;
+            margin-bottom: 50px;
+            font-size: 60px;
     }
 
     form {
@@ -72,7 +76,7 @@
 </head>
 <body>
 
-<h2>Yeni Kitap Ekle</h2>
+<h2>Add New Book</h2>
 
 <form th:action="@{/saveBook}" th:object="${book}" method="post">
   <input type="number" id="id" name="id" th:field="*{id}" hidden="hidden" />
@@ -96,7 +100,7 @@
   <label for="authorName">Yazar:</label>
   <input type="text" id="authorName" name="authorName" th:value="${authorName}"  required />
 
-  <button type="submit">Ekle</button>
+  <button type="submit">Save</button>
   <div class="button-container">
     <button class="btn" onclick="window.location.href='/'">Go Back</button>
   </div>
