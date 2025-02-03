@@ -5,8 +5,6 @@ import com.example.bookApp.repository.BookRepository;
 import com.example.bookApp.service.abstracts.IBookService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,12 +32,7 @@ public class BookServiceImpl implements IBookService {
         return bookRepository.findBookJustName();
     }
     @Override
-    public Book saveBook(Book book) {
-        if (book.getPublishedDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Published date cannot be in the future!");
-        }
-        return bookRepository.save(book);
-    }
+    public Book saveBook(Book book) {return bookRepository.save(book);}
     @Override
     public void deleteBookById(Long id) {
         bookRepository.deleteById(id);
@@ -67,7 +60,17 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<Book> getBooksPublishedAfter(int year) { // 💡 Eksik metot eklendi
+    public List<Book> getBooksPublishedAfter2023() {
+        return bookRepository.findBooksPublishedAfter(2023);
+    }
+
+    @Override
+    public List<Book> getBooksByPublisher(String publisherA) {
+        return null;
+    }
+
+    @Override
+    public List<Book> getBooksPublishedAfter(int year) {
         return bookRepository.findAll()
                 .stream()
                 .filter(book -> book.getPublishedDate() != null && book.getPublishedDate().getYear() > year)

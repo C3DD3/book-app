@@ -17,4 +17,8 @@ public interface IBookService {
     List<Book> getBooksStartingWithA(); // 'A' ile başlayan kitapları getir
 
     List<Book> findBooksWithAuthorsForTwoPublishers();
+
+    List<Book> getBooksPublishedAfter2023();
+
+    List<Book> getBooksByPublisher(String publisherA);
 }

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>2023 Sonrası Basılan Kitaplar</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+            color: #333;
+            margin-top: 40px;
+            margin-bottom: 50px;
+            font-size: 60px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .back-btn {
+      display: block;
+      width: 100px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #dc3545;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .back-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+    <h2>Published After 2023</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kitap Adı</th>
+            <th>Fiyat</th>
+            <th>ISBN-13</th>
+            <th>Yayın Tarihi</th>
+            <th>Yayınevi</th>
+            <th>Yazar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}">1</td>
+            <td th:text="${book.title}">Kitap Adı</td>
+            <td th:text="${book.price}">Fiyat</td>
+            <td th:text="${book.ISBN13}">ISBN-13</td>
+            <td th:text="${#temporals.format(book.publishedDate, 'dd/MM/yyyy')}">Yayın Tarihi</td>
+            <td th:text="${book.publisher.name}">Yayınevi</td>
+            <td th:text="${book.author.nameSurname}">Yazar</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/" class="back-btn">Go Back</a>
+</div>
+</body>
+</html>
