@@ -14,7 +14,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE b.title LIKE 'A%'")
     List<Book> findBooksStartingWithA();
 
-    @Query("SELECT b FROM Book b WHERE FUNCTION('YEAR', b.publishedDate) > :year")
+    @Query("SELECT b FROM Book b WHERE FUNCTION('date_part', 'year', b.publishedDate) > :year")
     List<Book> findBooksPublishedAfter(@Param("year") int year);
 
     @Query("SELECT b.title FROM Book b")
@@ -23,4 +23,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByTitleStartingWith(String prefix);
 
     Book getBookById(Long id);
+
+    Object findByPublisherName(String publisherA);
+
+    @Query("SELECT b FROM Book b WHERE function('year', b.publishedDate) > 2023")
+    Object findBooksPublishedAfter2023();
 }
